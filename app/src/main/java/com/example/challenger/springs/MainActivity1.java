@@ -3,6 +3,7 @@ package com.example.challenger.springs;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -42,39 +43,8 @@ public class MainActivity1 extends AppCompatActivity {
         setContentView(R.layout.activitymain);
         db = new DbHandler(this);
        setTitle("Springs of Joy");
-       // setSubtitle("MUSDAA Hymnal");
-        // DatabaseHandler db = new DatabaseHandler(this);
-               // txtedt = (EditText) findViewById(R.id.textView);
         lay  = (LinearLayout) findViewById(R.id.lnrlayout);
-
-        for(int vv=1;vv<=50;vv++){
-            bby = db.getSongById(vv);
-
-            final String ttle =bby.getSong_title();
-            zz = new Button(this);
-            zz.setId(bby.getId());
-            zz.setText(ttle);
-            zz.setTextColor(0xFF00FF66);
-            zz.setAllCaps(false);
-            zz.setBackgroundColor(0x00f5b041 );
-            // zz.setTextColor(0x0000);
-
-            final String   words = bby.getSong_body();
-
-            zz.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    Intent fire =new Intent(MainActivity1.this,SongView.class);
-                    fire.putExtra("the_data",words);
-                    fire.putExtra("the_title",ttle);
-                    startActivity(fire);
-                }
-            });
-            lay.addView(zz);
-
-        }
-
+            add1st50Songs();
 
     }
 
@@ -95,6 +65,7 @@ public class MainActivity1 extends AppCompatActivity {
             zz.setText(ttle);
             zz.setAllCaps(false);
             zz.setTextColor(0xFF00FF66);
+            zz.setBackgroundResource(R.drawable.btnbb2);
 
            // zz.setTextColor(0x0000);
 
@@ -133,13 +104,15 @@ public class MainActivity1 extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                songname11=query;
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                 lay.removeAllViews();
                 //  songname11= txtedt.getText().toString();
-
+                songname11 =query;
                 nu = db.getAllSongs(songname11);
                 my_method(nu);
-
+//                Intent search_intent =new Intent(MainActivity1.this,SearchActivity.class);
+//                search_intent.putExtra("srch_key",songname11);
+//                startActivity(search_intent);
                 return false;
             }
 
@@ -147,6 +120,8 @@ public class MainActivity1 extends AppCompatActivity {
             public boolean onQueryTextChange(String newText) {
                 return false;
             }
+
+
         });
 
         return true;
@@ -154,25 +129,55 @@ public class MainActivity1 extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-       /* if(id == R.id.action_search){
-           ray.setVisibility(View.VISIBLE);
-
-        }  */
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case android.R.id.home:
+               lay.removeAllViews();
+               add1st50Songs();
+                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
-    //code for changing keyboaard
-    /*
-    * if(txtedt.getInputType()==InputType.TYPE_CLASS_TEXT){
-                txtedt.setInputType(InputType.TYPE_CLASS_NUMBER);
-            }
-            else if(txtedt.getInputType()== InputType.TYPE_CLASS_NUMBER){
-                txtedt.setInputType(InputType.TYPE_CLASS_TEXT);
-                //change_key.setBackgroundResource(R.drawable.p123);
-            }
-    * */
+    public  void add1st50Songs(){
+        for(int vv=1;vv<=50;vv++){
+            bby = db.getSongById(vv);
+
+            final String ttle =bby.getSong_title();
+            zz = new Button(this);
+            zz.setId(bby.getId());
+            zz.setText(ttle);
+            zz.setTextColor(0xFF00FF66);
+            zz.setAllCaps(false);
+            zz.setBackgroundResource(R.drawable.btnbb2);
+            // zz.setTextColor(0x0000);
+
+            final String   words = bby.getSong_body();
+
+            zz.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Intent fire =new Intent(MainActivity1.this,SongView.class);
+                    fire.putExtra("the_data",words);
+                    fire.putExtra("the_title",ttle);
+                    startActivity(fire);
+                }
+            });
+            lay.addView(zz);
+
+        }
+    }
 }
+
+// menu.getItem(R.id.home).setOnMenuItemClickListener(
+//         new MenuItem.OnMenuItemClickListener() {
+//
+//@Override
+//public boolean onMenuItemClick(MenuItem item) {
+//        lay.removeAllViews();
+//        add1st50Songs();
+//        return true;
+//        }
+//        });
